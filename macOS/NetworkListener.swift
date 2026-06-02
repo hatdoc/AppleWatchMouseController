@@ -1,5 +1,6 @@
 import Foundation
 import Network
+import Combine
 
 class NetworkListener: ObservableObject {
     private var listener: NWListener?

@@ -6,6 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		85C1CE262FCE778D00734EC0 /* WatchMouseController Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 85C1CE252FCE778D00734EC0 /* WatchMouseController Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		85C1CE642FCE7C3D00734EC0 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE632FCE7C3D00734EC0 /* Models.swift */; };
+		85C1CE652FCE7C3D00734EC0 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE632FCE7C3D00734EC0 /* Models.swift */; };
+		85C1CE692FCE7C9700734EC0 /* MouseServerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE672FCE7C9700734EC0 /* MouseServerApp.swift */; };
+		85C1CE6A2FCE7C9700734EC0 /* MouseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE662FCE7C9700734EC0 /* MouseController.swift */; };
+		85C1CE6B2FCE7C9700734EC0 /* NetworkListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE682FCE7C9700734EC0 /* NetworkListener.swift */; };
+		85C1CE702FCE7CD500734EC0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE6E2FCE7CD500734EC0 /* SettingsView.swift */; };
+		85C1CE712FCE7CD500734EC0 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE6D2FCE7CD500734EC0 /* NetworkClient.swift */; };
+		85C1CE722FCE7CD500734EC0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE6C2FCE7CD500734EC0 /* ContentView.swift */; };
+		85C1CE732FCE7CD500734EC0 /* WatchControllerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1CE6F2FCE7CD500734EC0 /* WatchControllerApp.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		85C1CE022FCE768A00734EC0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,12 +34,59 @@
 			remoteGlobalIDString = 85C1CDF32FCE768900734EC0;
 			remoteInfo = AppleWatchMouseController;
 		};
+		85C1CE272FCE778D00734EC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85C1CDEC2FCE768900734EC0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 85C1CE242FCE778D00734EC0;
+			remoteInfo = "WatchMouseController Watch App";
+		};
+		85C1CE352FCE778E00734EC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85C1CDEC2FCE768900734EC0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 85C1CE242FCE778D00734EC0;
+			remoteInfo = "WatchMouseController Watch App";
+		};
+		85C1CE3F2FCE778E00734EC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85C1CDEC2FCE768900734EC0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 85C1CE242FCE778D00734EC0;
+			remoteInfo = "WatchMouseController Watch App";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		85C1CE492FCE778E00734EC0 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				85C1CE262FCE778D00734EC0 /* WatchMouseController Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		85C1CDF42FCE768900734EC0 /* AppleWatchMouseController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppleWatchMouseController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C1CE012FCE768A00734EC0 /* AppleWatchMouseControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppleWatchMouseControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85C1CE0B2FCE768A00734EC0 /* AppleWatchMouseControllerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppleWatchMouseControllerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		85C1CE202FCE778D00734EC0 /* WatchMouseController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchMouseController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		85C1CE252FCE778D00734EC0 /* WatchMouseController Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchMouseController Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85C1CE342FCE778E00734EC0 /* WatchMouseController Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchMouseController Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85C1CE3E2FCE778E00734EC0 /* WatchMouseController Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchMouseController Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85C1CE632FCE7C3D00734EC0 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Models.swift; path = ../Shared/Models.swift; sourceTree = SOURCE_ROOT; };
+		85C1CE662FCE7C9700734EC0 /* MouseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MouseController.swift; path = ../macOS/MouseController.swift; sourceTree = SOURCE_ROOT; };
+		85C1CE672FCE7C9700734EC0 /* MouseServerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MouseServerApp.swift; path = ../macOS/MouseServerApp.swift; sourceTree = SOURCE_ROOT; };
+		85C1CE682FCE7C9700734EC0 /* NetworkListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkListener.swift; path = ../macOS/NetworkListener.swift; sourceTree = SOURCE_ROOT; };
+		85C1CE6C2FCE7CD500734EC0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = ../watchOS/ContentView.swift; sourceTree = SOURCE_ROOT; };
+		85C1CE6D2FCE7CD500734EC0 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkClient.swift; path = ../watchOS/NetworkClient.swift; sourceTree = SOURCE_ROOT; };
+		85C1CE6E2FCE7CD500734EC0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = ../watchOS/SettingsView.swift; sourceTree = SOURCE_ROOT; };
+		85C1CE6F2FCE7CD500734EC0 /* WatchControllerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WatchControllerApp.swift; path = ../watchOS/WatchControllerApp.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -43,6 +103,21 @@
 		85C1CE0E2FCE768A00734EC0 /* AppleWatchMouseControllerUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = AppleWatchMouseControllerUITests;
+			sourceTree = "<group>";
+		};
+		85C1CE292FCE778D00734EC0 /* WatchMouseController Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchMouseController Watch App";
+			sourceTree = "<group>";
+		};
+		85C1CE372FCE778E00734EC0 /* WatchMouseController Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchMouseController Watch AppTests";
+			sourceTree = "<group>";
+		};
+		85C1CE412FCE778E00734EC0 /* WatchMouseController Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchMouseController Watch AppUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,15 +144,47 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		85C1CE222FCE778D00734EC0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85C1CE312FCE778E00734EC0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85C1CE3B2FCE778E00734EC0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		85C1CDEB2FCE768900734EC0 = {
 			isa = PBXGroup;
 			children = (
+				85C1CE6C2FCE7CD500734EC0 /* ContentView.swift */,
+				85C1CE6D2FCE7CD500734EC0 /* NetworkClient.swift */,
+				85C1CE6E2FCE7CD500734EC0 /* SettingsView.swift */,
+				85C1CE6F2FCE7CD500734EC0 /* WatchControllerApp.swift */,
+				85C1CE662FCE7C9700734EC0 /* MouseController.swift */,
+				85C1CE672FCE7C9700734EC0 /* MouseServerApp.swift */,
+				85C1CE682FCE7C9700734EC0 /* NetworkListener.swift */,
+				85C1CE632FCE7C3D00734EC0 /* Models.swift */,
 				85C1CDF62FCE768900734EC0 /* AppleWatchMouseController */,
 				85C1CE042FCE768A00734EC0 /* AppleWatchMouseControllerTests */,
 				85C1CE0E2FCE768A00734EC0 /* AppleWatchMouseControllerUITests */,
+				85C1CE292FCE778D00734EC0 /* WatchMouseController Watch App */,
+				85C1CE372FCE778E00734EC0 /* WatchMouseController Watch AppTests */,
+				85C1CE412FCE778E00734EC0 /* WatchMouseController Watch AppUITests */,
 				85C1CDF52FCE768900734EC0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +195,10 @@
 				85C1CDF42FCE768900734EC0 /* AppleWatchMouseController.app */,
 				85C1CE012FCE768A00734EC0 /* AppleWatchMouseControllerTests.xctest */,
 				85C1CE0B2FCE768A00734EC0 /* AppleWatchMouseControllerUITests.xctest */,
+				85C1CE202FCE778D00734EC0 /* WatchMouseController.app */,
+				85C1CE252FCE778D00734EC0 /* WatchMouseController Watch App.app */,
+				85C1CE342FCE778E00734EC0 /* WatchMouseController Watch AppTests.xctest */,
+				85C1CE3E2FCE778E00734EC0 /* WatchMouseController Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -163,6 +274,93 @@
 			productReference = 85C1CE0B2FCE768A00734EC0 /* AppleWatchMouseControllerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		85C1CE1F2FCE778D00734EC0 /* WatchMouseController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85C1CE4A2FCE778E00734EC0 /* Build configuration list for PBXNativeTarget "WatchMouseController" */;
+			buildPhases = (
+				85C1CE1E2FCE778D00734EC0 /* Resources */,
+				85C1CE492FCE778E00734EC0 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				85C1CE282FCE778D00734EC0 /* PBXTargetDependency */,
+			);
+			name = WatchMouseController;
+			packageProductDependencies = (
+			);
+			productName = WatchMouseController;
+			productReference = 85C1CE202FCE778D00734EC0 /* WatchMouseController.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		85C1CE242FCE778D00734EC0 /* WatchMouseController Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85C1CE462FCE778E00734EC0 /* Build configuration list for PBXNativeTarget "WatchMouseController Watch App" */;
+			buildPhases = (
+				85C1CE212FCE778D00734EC0 /* Sources */,
+				85C1CE222FCE778D00734EC0 /* Frameworks */,
+				85C1CE232FCE778D00734EC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				85C1CE292FCE778D00734EC0 /* WatchMouseController Watch App */,
+			);
+			name = "WatchMouseController Watch App";
+			packageProductDependencies = (
+			);
+			productName = "WatchMouseController Watch App";
+			productReference = 85C1CE252FCE778D00734EC0 /* WatchMouseController Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		85C1CE332FCE778E00734EC0 /* WatchMouseController Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85C1CE4D2FCE778E00734EC0 /* Build configuration list for PBXNativeTarget "WatchMouseController Watch AppTests" */;
+			buildPhases = (
+				85C1CE302FCE778E00734EC0 /* Sources */,
+				85C1CE312FCE778E00734EC0 /* Frameworks */,
+				85C1CE322FCE778E00734EC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				85C1CE362FCE778E00734EC0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				85C1CE372FCE778E00734EC0 /* WatchMouseController Watch AppTests */,
+			);
+			name = "WatchMouseController Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "WatchMouseController Watch AppTests";
+			productReference = 85C1CE342FCE778E00734EC0 /* WatchMouseController Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		85C1CE3D2FCE778E00734EC0 /* WatchMouseController Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85C1CE502FCE778E00734EC0 /* Build configuration list for PBXNativeTarget "WatchMouseController Watch AppUITests" */;
+			buildPhases = (
+				85C1CE3A2FCE778E00734EC0 /* Sources */,
+				85C1CE3B2FCE778E00734EC0 /* Frameworks */,
+				85C1CE3C2FCE778E00734EC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				85C1CE402FCE778E00734EC0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				85C1CE412FCE778E00734EC0 /* WatchMouseController Watch AppUITests */,
+			);
+			name = "WatchMouseController Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "WatchMouseController Watch AppUITests";
+			productReference = 85C1CE3E2FCE778E00734EC0 /* WatchMouseController Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -175,6 +373,7 @@
 				TargetAttributes = {
 					85C1CDF32FCE768900734EC0 = {
 						CreatedOnToolsVersion = 26.5;
+						LastSwiftMigration = 2650;
 					};
 					85C1CE002FCE768A00734EC0 = {
 						CreatedOnToolsVersion = 26.5;
@@ -183,6 +382,21 @@
 					85C1CE0A2FCE768A00734EC0 = {
 						CreatedOnToolsVersion = 26.5;
 						TestTargetID = 85C1CDF32FCE768900734EC0;
+					};
+					85C1CE1F2FCE778D00734EC0 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+					85C1CE242FCE778D00734EC0 = {
+						CreatedOnToolsVersion = 26.5;
+						LastSwiftMigration = 2650;
+					};
+					85C1CE332FCE778E00734EC0 = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = 85C1CE242FCE778D00734EC0;
+					};
+					85C1CE3D2FCE778E00734EC0 = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = 85C1CE242FCE778D00734EC0;
 					};
 				};
 			};
@@ -203,6 +417,10 @@
 				85C1CDF32FCE768900734EC0 /* AppleWatchMouseController */,
 				85C1CE002FCE768A00734EC0 /* AppleWatchMouseControllerTests */,
 				85C1CE0A2FCE768A00734EC0 /* AppleWatchMouseControllerUITests */,
+				85C1CE1F2FCE778D00734EC0 /* WatchMouseController */,
+				85C1CE242FCE778D00734EC0 /* WatchMouseController Watch App */,
+				85C1CE332FCE778E00734EC0 /* WatchMouseController Watch AppTests */,
+				85C1CE3D2FCE778E00734EC0 /* WatchMouseController Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -229,6 +447,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		85C1CE1E2FCE778D00734EC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85C1CE232FCE778D00734EC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85C1CE322FCE778E00734EC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85C1CE3C2FCE778E00734EC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -236,6 +482,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85C1CE642FCE7C3D00734EC0 /* Models.swift in Sources */,
+				85C1CE692FCE7C9700734EC0 /* MouseServerApp.swift in Sources */,
+				85C1CE6A2FCE7C9700734EC0 /* MouseController.swift in Sources */,
+				85C1CE6B2FCE7C9700734EC0 /* NetworkListener.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +497,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		85C1CE072FCE768A00734EC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85C1CE212FCE778D00734EC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85C1CE652FCE7C3D00734EC0 /* Models.swift in Sources */,
+				85C1CE702FCE7CD500734EC0 /* SettingsView.swift in Sources */,
+				85C1CE712FCE7CD500734EC0 /* NetworkClient.swift in Sources */,
+				85C1CE722FCE7CD500734EC0 /* ContentView.swift in Sources */,
+				85C1CE732FCE7CD500734EC0 /* WatchControllerApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85C1CE302FCE778E00734EC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85C1CE3A2FCE778E00734EC0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -265,6 +541,21 @@
 			isa = PBXTargetDependency;
 			target = 85C1CDF32FCE768900734EC0 /* AppleWatchMouseController */;
 			targetProxy = 85C1CE0C2FCE768A00734EC0 /* PBXContainerItemProxy */;
+		};
+		85C1CE282FCE778D00734EC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 85C1CE242FCE778D00734EC0 /* WatchMouseController Watch App */;
+			targetProxy = 85C1CE272FCE778D00734EC0 /* PBXContainerItemProxy */;
+		};
+		85C1CE362FCE778E00734EC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 85C1CE242FCE778D00734EC0 /* WatchMouseController Watch App */;
+			targetProxy = 85C1CE352FCE778E00734EC0 /* PBXContainerItemProxy */;
+		};
+		85C1CE402FCE778E00734EC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 85C1CE242FCE778D00734EC0 /* WatchMouseController Watch App */;
+			targetProxy = 85C1CE3F2FCE778E00734EC0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -394,14 +685,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 65Z7D992PN;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -416,6 +707,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -426,14 +718,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 65Z7D992PN;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -533,6 +825,203 @@
 			};
 			name = Release;
 		};
+		85C1CE472FCE778E00734EC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65Z7D992PN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchMouseController;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jed.WatchMouseController.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.5;
+			};
+			name = Debug;
+		};
+		85C1CE482FCE778E00734EC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65Z7D992PN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchMouseController;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jed.WatchMouseController.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.5;
+			};
+			name = Release;
+		};
+		85C1CE4B2FCE778E00734EC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65Z7D992PN;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchMouseController;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jed.WatchMouseController;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		85C1CE4C2FCE778E00734EC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65Z7D992PN;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchMouseController;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jed.WatchMouseController;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		85C1CE4E2FCE778E00734EC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65Z7D992PN;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jed.WatchMouseController-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchMouseController Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchMouseController Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.5;
+			};
+			name = Debug;
+		};
+		85C1CE4F2FCE778E00734EC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65Z7D992PN;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jed.WatchMouseController-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchMouseController Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchMouseController Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.5;
+			};
+			name = Release;
+		};
+		85C1CE512FCE778E00734EC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65Z7D992PN;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jed.WatchMouseController-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "WatchMouseController Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.5;
+			};
+			name = Debug;
+		};
+		85C1CE522FCE778E00734EC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65Z7D992PN;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jed.WatchMouseController-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "WatchMouseController Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.5;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -568,6 +1057,42 @@
 			buildConfigurations = (
 				85C1CE1C2FCE768A00734EC0 /* Debug */,
 				85C1CE1D2FCE768A00734EC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85C1CE462FCE778E00734EC0 /* Build configuration list for PBXNativeTarget "WatchMouseController Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85C1CE472FCE778E00734EC0 /* Debug */,
+				85C1CE482FCE778E00734EC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85C1CE4A2FCE778E00734EC0 /* Build configuration list for PBXNativeTarget "WatchMouseController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85C1CE4B2FCE778E00734EC0 /* Debug */,
+				85C1CE4C2FCE778E00734EC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85C1CE4D2FCE778E00734EC0 /* Build configuration list for PBXNativeTarget "WatchMouseController Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85C1CE4E2FCE778E00734EC0 /* Debug */,
+				85C1CE4F2FCE778E00734EC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85C1CE502FCE778E00734EC0 /* Build configuration list for PBXNativeTarget "WatchMouseController Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85C1CE512FCE778E00734EC0 /* Debug */,
+				85C1CE522FCE778E00734EC0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

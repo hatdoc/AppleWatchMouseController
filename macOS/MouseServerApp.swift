@@ -46,12 +46,12 @@ struct MouseServerApp: App {
             .padding()
             // Make the window a bit wider for the IP address
             .frame(width: 250)
+            .onAppear {
+                // Prompt for accessibility immediately on first run
+                _ = MouseController.shared.checkAccessibilityPermissions()
+                networkListener.start()
+            }
         }
         .menuBarExtraStyle(.window)
-        .onAppear {
-            // Prompt for accessibility immediately on first run
-            _ = MouseController.shared.checkAccessibilityPermissions()
-            networkListener.start()
-        }
     }
 }
