@@ -6,6 +6,7 @@ class NetworkListener: ObservableObject {
     private var listener: NWListener?
     @Published var isListening = false
     @Published var currentIP: String = "Unknown"
+    @Published var publishedServiceName: String = ""
     
     func start() {
         do {
@@ -16,14 +17,20 @@ class NetworkListener: ObservableObject {
             let serviceName = Host.current().localizedName ?? "Mac Mouse Server"
             listener?.service = NWListener.Service(name: serviceName, type: "_applewatchmouse._udp")
             
-            listener?.serviceRegistrationUpdateHandler = { serviceChange in
-                switch serviceChange {
-                case .add(let endpoint):
-                    print("Bonjour service published: \(endpoint)")
-                case .remove(let endpoint):
-                    print("Bonjour service stopped: \(endpoint)")
-                @unknown default:
-                    break
+            listener?.serviceRegistrationUpdateHandler = { [weak self] serviceChange in
+                DispatchQueue.main.async {
+                    switch serviceChange {
+                    case .add(let endpoint):
+                        if case let .service(name, _, _, _) = endpoint {
+                            self?.publishedServiceName = name
+                            print("Bonjour service published: \(name)")
+                        }
+                    case .remove(_):
+                        self?.publishedServiceName = ""
+                        print("Bonjour service stopped")
+                    @unknown default:
+                        break
+                    }
                 }
             }
             

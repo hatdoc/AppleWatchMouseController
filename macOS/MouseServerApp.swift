@@ -18,6 +18,17 @@ struct MouseServerApp: App {
                     Text("IP Address: \(networkListener.currentIP)")
                         .font(.body)
                         .textSelection(.enabled)
+                    
+                    if !networkListener.publishedServiceName.isEmpty {
+                        Text("Bonjour: \(networkListener.publishedServiceName)")
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                    } else {
+                        Text("Bonjour: Advertising...")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
+                    
                     Text("Port: 5050")
                         .font(.caption)
                 } else {
