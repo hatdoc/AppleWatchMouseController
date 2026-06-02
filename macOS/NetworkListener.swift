@@ -12,6 +12,21 @@ class NetworkListener: ObservableObject {
             let port = NWEndpoint.Port(rawValue: 5050)!
             listener = try NWListener(using: .udp, on: port)
             
+            // Advertise the server as a Bonjour service
+            let serviceName = Host.current().localizedName ?? "Mac Mouse Server"
+            listener?.service = NWListener.Service(name: serviceName, type: "_applewatchmouse._udp")
+            
+            listener?.serviceRegistrationUpdateHandler = { serviceChange in
+                switch serviceChange {
+                case .add(let endpoint):
+                    print("Bonjour service published: \(endpoint)")
+                case .remove(let endpoint):
+                    print("Bonjour service stopped: \(endpoint)")
+                @unknown default:
+                    break
+                }
+            }
+            
             listener?.stateUpdateHandler = { [weak self] state in
                 DispatchQueue.main.async {
                     switch state {

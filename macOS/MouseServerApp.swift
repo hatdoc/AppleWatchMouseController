@@ -5,7 +5,7 @@ struct MouseServerApp: App {
     @StateObject private var networkListener = NetworkListener()
     
     var body: some Scene {
-        MenuBarExtra("Mouse Server", systemImage: "mouse") {
+        MenuBarExtra("Mouse Server", systemImage: "computermouse") {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Remote Mouse Server")
                     .font(.headline)

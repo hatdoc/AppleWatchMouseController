@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage("hostIP") private var hostIP: String = "192.168.1.X"
     @AppStorage("sensitivity") private var sensitivity: Double = 1.0
+    @AppStorage("autoConnect") private var autoConnect: Bool = true
     
     @AppStorage("singleTapAction") private var singleTapAction: GestureAction = .leftClick
     @AppStorage("doubleTapAction") private var doubleTapAction: GestureAction = .doubleClick
@@ -13,8 +14,34 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section(header: Text("Connection")) {
-                TextField("Mac IP Address", text: $hostIP)
-                    .textContentType(.URL)
+                Toggle("Auto-Connect", isOn: Binding(
+                    get: { autoConnect },
+                    set: { newValue in
+                        autoConnect = newValue
+                        if newValue {
+                            NetworkClient.shared.startBrowsing()
+                        } else {
+                            NetworkClient.shared.stopBrowsing()
+                            NetworkClient.shared.disconnect()
+                        }
+                    }
+                ))
+                
+                if !autoConnect {
+                    TextField("Mac IP Address", text: $hostIP)
+                        .textContentType(.URL)
+                } else {
+                    HStack {
+                        Text("IP Address")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text("Automatic")
+                            .font(.footnote)
+                            .foregroundColor(.blue)
+                            .bold()
+                    }
+                }
                 
                 Toggle("Use Bluetooth (Beta)", isOn: Binding(
                     get: { useBluetooth },
