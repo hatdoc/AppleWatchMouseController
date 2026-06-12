@@ -1,215 +1,173 @@
 import Foundation
-import CoreBluetooth
+import Network
 import Combine
 
-class NetworkClient: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+class NetworkClient: ObservableObject {
     static let shared = NetworkClient()
-    
-    private var centralManager: CBCentralManager?
-    private var connectedPeripheral: CBPeripheral?
-    private var writeCharacteristic: CBCharacteristic?
-    
+
+    private var connection: NWConnection?
+    private var browser: NWBrowser?
+    private var retryTimer: Timer?
+
     @Published var isConnected: Bool = false
     @Published var connectedHostName: String = ""
     @Published var isSearching: Bool = false
-    @Published var discoveredServers: [CBPeripheral] = []
-    
-    // Service and Characteristic UUIDs for Bluetooth Communication
-    static let serviceUUID = CBUUID(string: "E20A39F4-73F5-4BC4-A12F-17D1AD07A961")
-    static let characteristicUUID = CBUUID(string: "08590F7E-DB05-467E-8757-72F6FAEB13D4")
-    
-    private override init() {
-        super.init()
-        // CoreBluetooth Central Manager initialization
-        centralManager = CBCentralManager(delegate: self, queue: nil)
+    @Published var discoveredServers: [NWEndpoint] = []
+    @Published var browserFailed: Bool = false
+
+    private let port = NWEndpoint.Port(rawValue: 5050)!
+
+    private init() {
+        let isAutoConnectEnabled = UserDefaults.standard.object(forKey: "autoConnect") as? Bool ?? true
+        if isAutoConnectEnabled {
+            startBrowsing()
+        }
     }
-    
+
     func startBrowsing() {
-        guard let centralManager = centralManager, centralManager.state == .poweredOn else { return }
-        guard !isSearching else { return }
-        
+        // Stop any existing browser before starting fresh
+        stopBrowsing()
+
+        browserFailed = false
         discoveredServers.removeAll()
         isSearching = true
-        
-        // Scan for all peripherals to bypass watchOS hardware-level packet size filtering limitations.
-        // Software filtering will check for our custom service UUID or name prefix.
-        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
-    }
-    
-    func stopBrowsing() {
-        centralManager?.stopScan()
-        isSearching = false
-    }
-    
-    func connect(to peripheral: CBPeripheral) {
-        stopBrowsing()
-        
-        connectedPeripheral?.delegate = nil
-        if let oldPeripheral = connectedPeripheral {
-            centralManager?.cancelPeripheralConnection(oldPeripheral)
-        }
-        
-        connectedPeripheral = peripheral
-        connectedPeripheral?.delegate = self
-        
-        connectedHostName = peripheral.name ?? "Mac Server"
-        centralManager?.connect(peripheral, options: nil)
-    }
-    
-    func disconnect() {
-        if let peripheral = connectedPeripheral {
-            centralManager?.cancelPeripheralConnection(peripheral)
-        }
-        connectedPeripheral = nil
-        writeCharacteristic = nil
-        
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.isConnected = false
-            self.connectedHostName = ""
-            
-            // Restart scanning if auto-connect is still enabled
-            let isAutoConnectEnabled = UserDefaults.standard.object(forKey: "autoConnect") as? Bool ?? true
-            if isAutoConnectEnabled {
-                self.startBrowsing()
-            }
-        }
-    }
-    
-    func send(command: MouseCommand) {
-        guard isConnected, let peripheral = connectedPeripheral, let characteristic = writeCharacteristic else { return }
-        
-        do {
-            let data = try JSONEncoder().encode(command)
-            
-            // Use writeWithoutResponse for higher frequency events (movements) to decrease latency
-            let writeType: CBCharacteristicWriteType = characteristic.properties.contains(.writeWithoutResponse) ? .withoutResponse : .withResponse
-            
-            peripheral.writeValue(data, for: characteristic, type: writeType)
-        } catch {
-            print("Error encoding command: \(error)")
-        }
-    }
-    
-    // MARK: - CBCentralManagerDelegate
-    
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            switch central.state {
-            case .poweredOn:
-                print("Central powered on.")
+
+        let parameters = NWParameters.udp
+        let descriptor = NWBrowser.Descriptor.bonjour(type: "_applewatchmouse._udp", domain: nil)
+        let newBrowser = NWBrowser(for: descriptor, using: parameters)
+        self.browser = newBrowser
+
+        newBrowser.browseResultsChangedHandler = { [weak self] results, changes in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.discoveredServers = results.map { $0.endpoint }
+
                 let isAutoConnectEnabled = UserDefaults.standard.object(forKey: "autoConnect") as? Bool ?? true
-                if isAutoConnectEnabled {
-                    self.startBrowsing()
-                }
-            case .poweredOff:
-                print("Central powered off.")
-                self.disconnect()
-            case .unauthorized:
-                print("Central unauthorized. Please grant Bluetooth permissions.")
-                self.disconnect()
-            case .unsupported:
-                print("Bluetooth is unsupported on this Apple Watch.")
-                self.disconnect()
-            default:
-                break
-            }
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
-            // Software filtering check
-            var isMouseServer = false
-            if let serviceUUIDs = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] {
-                isMouseServer = serviceUUIDs.contains(Self.serviceUUID)
-            }
-            
-            // Name prefix fallback filter
-            if !isMouseServer, let localName = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
-                isMouseServer = localName.hasPrefix("MouseServer:")
-            } else if !isMouseServer, let peripheralName = peripheral.name {
-                isMouseServer = peripheralName.hasPrefix("MouseServer:")
-            }
-            
-            if isMouseServer {
-                if !self.discoveredServers.contains(where: { $0.identifier == peripheral.identifier }) {
-                    self.discoveredServers.append(peripheral)
-                    
-                    let isAutoConnectEnabled = UserDefaults.standard.object(forKey: "autoConnect") as? Bool ?? true
-                    if isAutoConnectEnabled && !self.isConnected {
-                        self.connect(to: peripheral)
+                if isAutoConnectEnabled && !self.isConnected {
+                    if let firstEndpoint = self.discoveredServers.first {
+                        self.connect(to: firstEndpoint)
                     }
                 }
             }
         }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("Connected to peripheral: \(peripheral.name ?? "Unknown")")
-        peripheral.discoverServices([Self.serviceUUID])
-    }
-    
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print("Failed to connect to peripheral: \(error?.localizedDescription ?? "no error description")")
-        disconnect()
-    }
-    
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("Disconnected from peripheral: \(peripheral.name ?? "Unknown")")
-        disconnect()
-    }
-    
-    // MARK: - CBPeripheralDelegate
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        if let error = error {
-            print("Error discovering services: \(error.localizedDescription)")
-            disconnect()
-            return
-        }
-        
-        guard let services = peripheral.services else {
-            print("No services found.")
-            disconnect()
-            return
-        }
-        
-        for service in services {
-            if service.uuid == Self.serviceUUID {
-                print("Found service: \(service.uuid). Discovering characteristics...")
-                peripheral.discoverCharacteristics([Self.characteristicUUID], for: service)
-                return
-            }
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        if let error = error {
-            print("Error discovering characteristics: \(error.localizedDescription)")
-            disconnect()
-            return
-        }
-        
-        guard let characteristics = service.characteristics else {
-            print("No characteristics found.")
-            disconnect()
-            return
-        }
-        
-        for characteristic in characteristics {
-            if characteristic.uuid == Self.characteristicUUID {
-                print("Found write characteristic: \(characteristic.uuid)")
-                self.writeCharacteristic = characteristic
-                
-                DispatchQueue.main.async { [weak self] in
-                    self?.isConnected = true
+
+        newBrowser.stateUpdateHandler = { [weak self] state in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch state {
+                case .ready:
+                    self.browserFailed = false
+                    print("Browser ready, scanning for Bonjour services...")
+                case .failed(let error):
+                    print("Browser failed: \(error)")
+                    self.isSearching = false
+                    self.browserFailed = true
+                    // Auto-retry after 3 seconds (handles permission denial recovery)
+                    self.scheduleRetry()
+                case .cancelled:
+                    self.isSearching = false
+                case .waiting(let error):
+                    // This fires when Local Network permission hasn't been granted yet
+                    print("Browser waiting (likely needs Local Network permission): \(error)")
+                default:
+                    break
                 }
-                return
             }
+        }
+
+        newBrowser.start(queue: .global(qos: .userInitiated))
+    }
+
+    func stopBrowsing() {
+        retryTimer?.invalidate()
+        retryTimer = nil
+        browser?.browseResultsChangedHandler = nil
+        browser?.stateUpdateHandler = nil
+        browser?.cancel()
+        browser = nil
+        isSearching = false
+    }
+
+    private func scheduleRetry() {
+        retryTimer?.invalidate()
+        retryTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
+            guard let self = self, !self.isConnected else { return }
+            print("Retrying Bonjour browse...")
+            self.startBrowsing()
+        }
+    }
+
+    func connect(to ip: String) {
+        let host = NWEndpoint.Host(ip)
+        let endpoint = NWEndpoint.hostPort(host: host, port: port)
+        connect(to: endpoint)
+    }
+
+    func connect(to endpoint: NWEndpoint) {
+        // Don't reconnect if already connected to same endpoint
+        if isConnected { return }
+
+        connection?.cancel()
+
+        // Extract a friendly name for UI display
+        if case let .service(name, _, _, _) = endpoint {
+            self.connectedHostName = name
+        } else if case let .hostPort(host, _) = endpoint {
+            self.connectedHostName = "\(host)"
+        } else {
+            self.connectedHostName = "Mac Server"
+        }
+
+        print("Connecting to \(endpoint)...")
+
+        let conn = NWConnection(to: endpoint, using: .udp)
+        self.connection = conn
+
+        conn.stateUpdateHandler = { [weak self] state in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch state {
+                case .ready:
+                    self.isConnected = true
+                    self.browserFailed = false
+                    print("Connected to \(endpoint)")
+                case .failed(let error):
+                    self.isConnected = false
+                    self.connectedHostName = ""
+                    print("Connection failed: \(error)")
+                    // Auto-retry browsing after a connection failure
+                    let isAutoConnectEnabled = UserDefaults.standard.object(forKey: "autoConnect") as? Bool ?? true
+                    if isAutoConnectEnabled {
+                        self.scheduleRetry()
+                    }
+                case .cancelled:
+                    self.isConnected = false
+                    self.connectedHostName = ""
+                default:
+                    break
+                }
+            }
+        }
+
+        conn.start(queue: .global(qos: .userInteractive))
+    }
+
+    func disconnect() {
+        stopBrowsing()
+        connection?.cancel()
+        connection = nil
+        isConnected = false
+        connectedHostName = ""
+    }
+
+    func send(command: MouseCommand) {
+        guard let connection = connection, connection.state == .ready else { return }
+
+        do {
+            let data = try JSONEncoder().encode(command)
+            connection.send(content: data, completion: .idempotent)
+        } catch {
+            print("Error encoding command: \(error)")
         }
     }
 }

@@ -694,7 +694,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connects to the watch controller via Bluetooth.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -729,7 +728,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connects to the watch controller via Bluetooth.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -844,7 +842,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "../watchOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchMouseController;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connects to the macOS mouse server via Bluetooth.";
+				INFOPLIST_KEY_NSBonjourServices = (
+					"_applewatchmouse._udp",
+				);
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Connects to the macOS mouse server on your local network.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -881,7 +882,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "../watchOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = WatchMouseController;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connects to the macOS mouse server via Bluetooth.";
+				INFOPLIST_KEY_NSBonjourServices = (
+					"_applewatchmouse._udp",
+				);
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Connects to the macOS mouse server on your local network.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -918,7 +922,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jed.WatchMouseController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connects to the macOS mouse server via Bluetooth.";
+				INFOPLIST_KEY_NSBonjourServices = (
+					"_applewatchmouse._udp",
+				);
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Connects to the macOS mouse server on your local network.";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -938,7 +945,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jed.WatchMouseController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Connects to the macOS mouse server via Bluetooth.";
+				INFOPLIST_KEY_NSBonjourServices = (
+					"_applewatchmouse._udp",
+				);
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Connects to the macOS mouse server on your local network.";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;

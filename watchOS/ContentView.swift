@@ -1,9 +1,10 @@
 import SwiftUI
-import CoreBluetooth
+import Network
 
 struct ContentView: View {
     @StateObject private var networkClient = NetworkClient.shared
     
+    @AppStorage("hostIP") private var hostIP: String = "192.168.1.X"
     @AppStorage("sensitivity") private var sensitivity: Double = 1.0
     @AppStorage("autoConnect") private var autoConnect: Bool = true
     
@@ -20,7 +21,13 @@ struct ContentView: View {
                 Color.black.edgesIgnoringSafeArea(.all)
                 
                 if !networkClient.isConnected {
-                    searchingView
+                    VStack(spacing: 8) {
+                        if autoConnect {
+                            searchingView
+                        } else {
+                            manualConnectView
+                        }
+                    }
                 } else {
                     trackpadView
                 }
@@ -36,7 +43,9 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            networkClient.startBrowsing()
+            if autoConnect {
+                networkClient.startBrowsing()
+            }
         }
     }
     
@@ -57,9 +66,9 @@ struct ContentView: View {
                     .fill(Color.blue.opacity(0.1))
                     .frame(width: 50, height: 50)
                 
-                Image(systemName: "desktopcomputer")
+                Image(systemName: networkClient.browserFailed ? "wifi.exclamationmark" : "desktopcomputer")
                     .font(.title2)
-                    .foregroundColor(.blue)
+                    .foregroundColor(networkClient.browserFailed ? .orange : .blue)
             }
             .onAppear {
                 withAnimation(Animation.easeOut(duration: 1.5).repeatForever(autoreverses: false)) {
@@ -70,24 +79,39 @@ struct ContentView: View {
                 isPulsing = false
             }
             
-            Text(networkClient.isSearching ? "Searching for Mac..." : "Bluetooth Idle")
-                .font(.system(.footnote, design: .rounded))
-                .foregroundColor(.secondary)
+            if networkClient.browserFailed {
+                Text("Allow Local Network Access")
+                    .font(.system(.caption2, design: .rounded))
+                    .foregroundColor(.orange)
+                Text("On your iPhone: Settings → Privacy & Security → Local Network → enable this app")
+                    .font(.system(size: 8, design: .rounded))
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 6)
+            } else {
+                Text(networkClient.isSearching ? "Searching for Mac..." : "Ready to search")
+                    .font(.system(.footnote, design: .rounded))
+                    .foregroundColor(.secondary)
+                Text("Make sure Mac Mouse Server is running")
+                    .font(.system(size: 8, design: .rounded))
+                    .foregroundColor(.secondary.opacity(0.7))
+                    .multilineTextAlignment(.center)
+            }
             
             Spacer()
             
             if !networkClient.discoveredServers.isEmpty {
                 ScrollView {
                     VStack(spacing: 6) {
-                        ForEach(networkClient.discoveredServers, id: \.identifier) { peripheral in
+                        ForEach(networkClient.discoveredServers, id: \.self) { endpoint in
                             Button(action: {
-                                networkClient.connect(to: peripheral)
+                                networkClient.connect(to: endpoint)
                             }) {
                                 HStack {
                                     Image(systemName: "macmini")
                                         .foregroundColor(.green)
                                         .font(.footnote)
-                                    Text(friendlyName(for: peripheral))
+                                    Text(friendlyName(for: endpoint))
                                         .font(.system(.caption2, design: .rounded))
                                         .lineLimit(1)
                                     Spacer()
@@ -105,22 +129,48 @@ struct ContentView: View {
                     }
                     .padding(.horizontal, 12)
                 }
-                .frame(maxHeight: 75)
+                .frame(maxHeight: 65)
             } else {
-                if !networkClient.isSearching {
-                    Button("Scan for Mac") {
+                VStack(spacing: 4) {
+                    Button(networkClient.isSearching ? "Searching..." : "Retry Search") {
                         networkClient.startBrowsing()
                     }
                     .font(.system(.caption2, design: .rounded))
                     .foregroundColor(.blue)
-                    .padding(.bottom, 10)
-                } else {
-                    Text("Make sure Mac Server is open")
-                        .font(.system(size: 8))
-                        .foregroundColor(.secondary)
-                        .padding(.bottom, 10)
+                    .disabled(networkClient.isSearching)
+                    
+                    Button("Connect to Saved IP") {
+                        networkClient.connect(to: hostIP)
+                    }
+                    .font(.system(size: 9, design: .rounded))
+                    .foregroundColor(.secondary)
                 }
             }
+        }
+    }
+    
+    private var manualConnectView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "wifi.slash")
+                .font(.largeTitle)
+                .foregroundColor(.red)
+            Text("Not Connected")
+                .foregroundColor(.red)
+                .font(.footnote)
+            
+            Button("Connect to \(hostIP)") {
+                networkClient.connect(to: hostIP)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.blue)
+            .font(.footnote)
+            
+            Button("Enable Auto-Connect") {
+                autoConnect = true
+                networkClient.startBrowsing()
+            }
+            .font(.system(.caption2, design: .rounded))
+            .foregroundColor(.secondary)
         }
     }
     
@@ -225,11 +275,12 @@ struct ContentView: View {
     
     // MARK: - Helpers
     
-    private func friendlyName(for peripheral: CBPeripheral) -> String {
-        let name = peripheral.name ?? "Mac Server"
-        if name.hasPrefix("MouseServer: ") {
-            return String(name.dropFirst("MouseServer: ".count))
+    private func friendlyName(for endpoint: NWEndpoint) -> String {
+        if case let .service(name, _, _, _) = endpoint {
+            return name
+        } else if case let .hostPort(host, _) = endpoint {
+            return "\(host)"
         }
-        return name
+        return "Mac Server"
     }
 }

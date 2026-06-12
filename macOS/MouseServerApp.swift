@@ -13,20 +13,26 @@ struct MouseServerApp: App {
                 Divider()
                 
                 if networkListener.isListening {
-                    Text("Status: Advertising")
+                    Text("Status: Listening")
                         .foregroundColor(.green)
+                    Text("IP Address: \(networkListener.currentIP)")
+                        .font(.body)
+                        .textSelection(.enabled)
                     
                     if !networkListener.publishedServiceName.isEmpty {
-                        Text("Name: \(networkListener.publishedServiceName)")
-                            .font(.body)
-                            .textSelection(.enabled)
+                        Text("Bonjour: \(networkListener.publishedServiceName)")
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                    } else {
+                        Text("Bonjour: Advertising...")
+                            .font(.caption)
+                            .foregroundColor(.orange)
                     }
                     
-                    Text("Service: E20A39F4-73F5...")
+                    Text("Port: 5050")
                         .font(.caption)
-                        .foregroundColor(.secondary)
                 } else {
-                    Text("Status: Bluetooth Offline")
+                    Text("Status: Disconnected")
                         .foregroundColor(.red)
                 }
                 
