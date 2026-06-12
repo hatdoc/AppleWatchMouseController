@@ -1,15 +1,11 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("hostIP") private var hostIP: String = "192.168.1.X"
     @AppStorage("sensitivity") private var sensitivity: Double = 1.0
     @AppStorage("autoConnect") private var autoConnect: Bool = true
     
     @AppStorage("singleTapAction") private var singleTapAction: GestureAction = .leftClick
     @AppStorage("doubleTapAction") private var doubleTapAction: GestureAction = .doubleClick
-    @AppStorage("useBluetooth") private var useBluetooth: Bool = false
-    
-    @State private var showBluetoothWarning = false
     
     var body: some View {
         Form {
@@ -22,36 +18,20 @@ struct SettingsView: View {
                             NetworkClient.shared.startBrowsing()
                         } else {
                             NetworkClient.shared.stopBrowsing()
-                            NetworkClient.shared.disconnect()
                         }
                     }
                 ))
                 
-                if !autoConnect {
-                    TextField("Mac IP Address", text: $hostIP)
-                        .textContentType(.URL)
-                } else {
-                    HStack {
-                        Text("IP Address")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text("Automatic")
-                            .font(.footnote)
-                            .foregroundColor(.blue)
-                            .bold()
-                    }
+                HStack {
+                    Text("Mode")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text("Bluetooth")
+                        .font(.footnote)
+                        .foregroundColor(.blue)
+                        .bold()
                 }
-                
-                Toggle("Use Bluetooth (Beta)", isOn: Binding(
-                    get: { useBluetooth },
-                    set: { newValue in
-                        if newValue {
-                            showBluetoothWarning = true
-                        }
-                        useBluetooth = newValue
-                    }
-                ))
             }
             
             Section(header: Text("Sensitivity")) {
@@ -76,14 +56,5 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
-        .alert(isPresented: $showBluetoothWarning) {
-            Alert(
-                title: Text("Bluetooth Mode"),
-                message: Text("Bluetooth requires manual pairing and currently has slightly higher latency. Local Network (UDP) is highly recommended for best performance. Continuing will fallback to UDP for now."),
-                dismissButton: .default(Text("OK")) {
-                    useBluetooth = false // Fallback logic as stub
-                }
-            )
-        }
     }
 }

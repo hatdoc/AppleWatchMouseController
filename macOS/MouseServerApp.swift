@@ -13,27 +13,24 @@ struct MouseServerApp: App {
                 Divider()
                 
                 if networkListener.isListening {
-                    Text("Status: Listening")
+                    Text("Status: Advertising")
                         .foregroundColor(.green)
-                    Text("IP Address: \(networkListener.currentIP)")
-                        .font(.body)
-                        .textSelection(.enabled)
+                        .bold()
                     
                     if !networkListener.publishedServiceName.isEmpty {
-                        Text("Bonjour: \(networkListener.publishedServiceName)")
-                            .font(.caption)
-                            .foregroundColor(.blue)
-                    } else {
-                        Text("Bonjour: Advertising...")
-                            .font(.caption)
-                            .foregroundColor(.orange)
+                        Text("Device: \(networkListener.publishedServiceName)")
+                            .font(.body)
+                            .foregroundColor(.secondary)
                     }
                     
-                    Text("Port: 5050")
+                    Text("Bluetooth is active. Open the Mouse app on your watch to connect.")
                         .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.leading)
                 } else {
-                    Text("Status: Disconnected")
+                    Text("Status: Offline")
                         .foregroundColor(.red)
+                        .bold()
                 }
                 
                 Divider()

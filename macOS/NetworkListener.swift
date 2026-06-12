@@ -1,77 +1,131 @@
 import Foundation
-import Network
+import CoreBluetooth
 import Combine
 
-class NetworkListener: ObservableObject {
-    private var listener: NWListener?
+class NetworkListener: NSObject, ObservableObject, CBPeripheralManagerDelegate {
+    private var peripheralManager: CBPeripheralManager?
+    private var characteristic: CBMutableCharacteristic?
+    
     @Published var isListening = false
-    @Published var currentIP: String = "Unknown"
     @Published var publishedServiceName: String = ""
+    @Published var currentIP: String = "Bluetooth Mode"
+    
+    static let serviceUUID = CBUUID(string: "E20A39F4-73F5-4BC4-A12F-17D1AD07A961")
+    static let characteristicUUID = CBUUID(string: "08590F7E-DB05-467E-8757-72F6FAEB13D4")
+    
+    override init() {
+        super.init()
+    }
     
     func start() {
-        do {
-            let port = NWEndpoint.Port(rawValue: 5050)!
-            listener = try NWListener(using: .udp, on: port)
-            
-            // Advertise the server as a Bonjour service
-            let serviceName = Host.current().localizedName ?? "Mac Mouse Server"
-            listener?.service = NWListener.Service(name: serviceName, type: "_applewatchmouse._udp")
-            
-            listener?.serviceRegistrationUpdateHandler = { [weak self] serviceChange in
-                DispatchQueue.main.async {
-                    switch serviceChange {
-                    case .add(let endpoint):
-                        if case let .service(name, _, _, _) = endpoint {
-                            self?.publishedServiceName = name
-                            print("Bonjour service published: \(name)")
-                        }
-                    case .remove(_):
-                        self?.publishedServiceName = ""
-                        print("Bonjour service stopped")
-                    @unknown default:
-                        break
-                    }
-                }
-            }
-            
-            listener?.stateUpdateHandler = { [weak self] state in
-                DispatchQueue.main.async {
-                    switch state {
-                    case .ready:
-                        self?.isListening = true
-                        self?.currentIP = self?.getIPAddress() ?? "Unknown"
-                        print("Listening on UDP port \(port)")
-                    case .failed(let error):
-                        print("Listener failed with error: \(error)")
-                        self?.isListening = false
-                    default:
-                        break
-                    }
-                }
-            }
-            
-            listener?.newConnectionHandler = { [weak self] connection in
-                self?.handleConnection(connection)
-            }
-            
-            listener?.start(queue: .global(qos: .userInteractive))
-        } catch {
-            print("Failed to create listener: \(error)")
+        if peripheralManager == nil {
+            peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
         }
     }
     
-    private func handleConnection(_ connection: NWConnection) {
-        connection.start(queue: .global(qos: .userInteractive))
-        receive(on: connection)
+    // MARK: - CBPeripheralManagerDelegate
+    
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        switch peripheral.state {
+        case .poweredOn:
+            print("Bluetooth Peripheral powered on. Setting up service...")
+            setupService()
+        case .poweredOff:
+            print("Bluetooth Peripheral powered off.")
+            stopAdvertising()
+        case .unauthorized:
+            print("Bluetooth Peripheral unauthorized. Check system settings.")
+            DispatchQueue.main.async {
+                self.isListening = false
+            }
+        case .unsupported:
+            print("Bluetooth is unsupported on this device.")
+            DispatchQueue.main.async {
+                self.isListening = false
+            }
+        default:
+            break
+        }
     }
     
-    private func receive(on connection: NWConnection) {
-        connection.receiveMessage { [weak self] (data, context, isComplete, error) in
-            if let data = data {
-                self?.processMessage(data)
+    private func setupService() {
+        guard let peripheralManager = peripheralManager else { return }
+        
+        let mouseChar = CBMutableCharacteristic(
+            type: Self.characteristicUUID,
+            properties: [.writeWithoutResponse, .write],
+            value: nil,
+            permissions: [.writeable]
+        )
+        
+        let mouseService = CBMutableService(type: Self.serviceUUID, primary: true)
+        mouseService.characteristics = [mouseChar]
+        
+        peripheralManager.removeAllServices()
+        peripheralManager.add(mouseService)
+        
+        self.characteristic = mouseChar
+    }
+    
+    func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: Error?) {
+        if let error = error {
+            print("Failed to add service: \(error.localizedDescription)")
+            return
+        }
+        
+        print("Service added successfully. Starting advertising...")
+        startAdvertising()
+    }
+    
+    private func startAdvertising() {
+        guard let peripheralManager = peripheralManager, peripheralManager.state == .poweredOn else { return }
+        
+        let macName = Host.current().localizedName ?? "Mac Mouse Server"
+        self.publishedServiceName = macName
+        
+        // CRITICAL: Do NOT include long name in advertisementData key
+        // to avoid exceeding 28 byte limit which drops Service UUID.
+        let advertisementData: [String: Any] = [
+            CBAdvertisementDataServiceUUIDsKey: [Self.serviceUUID]
+        ]
+        
+        peripheralManager.startAdvertising(advertisementData)
+    }
+    
+    func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
+        DispatchQueue.main.async {
+            if let error = error {
+                print("Failed to start advertising: \(error.localizedDescription)")
+                self.isListening = false
+            } else {
+                print("Advertising started successfully for Service UUID: \(Self.serviceUUID)")
+                self.isListening = true
             }
-            if error == nil && !isComplete {
-                self?.receive(on: connection)
+        }
+    }
+    
+    private func stopAdvertising() {
+        peripheralManager?.stopAdvertising()
+        DispatchQueue.main.async {
+            self.isListening = false
+            self.publishedServiceName = ""
+        }
+    }
+    
+    // Handle write requests from Central (Watch App)
+    func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+        for request in requests {
+            if request.characteristic.uuid == Self.characteristicUUID {
+                if let data = request.value {
+                    processMessage(data)
+                }
+                
+                // Respond back to central if request type requires response
+                if request.characteristic.properties.contains(.write) {
+                    peripheralManager?.respond(to: request, withResult: .success)
+                }
+            } else {
+                peripheralManager?.respond(to: request, withResult: .requestNotSupported)
             }
         }
     }
@@ -94,30 +148,5 @@ class NetworkListener: ObservableObject {
         } catch {
             print("Failed to decode command: \(error)")
         }
-    }
-    
-    // Helper to get local IP address for display
-    private func getIPAddress() -> String? {
-        var address: String?
-        var ifaddr: UnsafeMutablePointer<ifaddrs>?
-        if getifaddrs(&ifaddr) == 0 {
-            var ptr = ifaddr
-            while ptr != nil {
-                defer { ptr = ptr?.pointee.ifa_next }
-                
-                guard let interface = ptr?.pointee else { continue }
-                let addrFamily = interface.ifa_addr.pointee.sa_family
-                if addrFamily == UInt8(AF_INET) {
-                    let name: String = String(cString: interface.ifa_name)
-                    if name == "en0" || name == "en1" { // Wi-Fi interfaces
-                        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-                        getnameinfo(interface.ifa_addr, socklen_t(interface.ifa_addr.pointee.sa_len), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
-                        address = String(cString: hostname)
-                    }
-                }
-            }
-            freeifaddrs(ifaddr)
-        }
-        return address
     }
 }

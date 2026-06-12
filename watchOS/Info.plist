@@ -8,5 +8,7 @@
 	<array>
 		<string>_applewatchmouse._udp</string>
 	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Uses Bluetooth to connect to your Mac and stream cursor control gestures.</string>
 </dict>
 </plist>

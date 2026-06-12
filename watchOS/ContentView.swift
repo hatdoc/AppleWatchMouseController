@@ -1,10 +1,9 @@
 import SwiftUI
-import Network
+import CoreBluetooth
 
 struct ContentView: View {
     @StateObject private var networkClient = NetworkClient.shared
     
-    @AppStorage("hostIP") private var hostIP: String = "192.168.1.X"
     @AppStorage("sensitivity") private var sensitivity: Double = 1.0
     @AppStorage("autoConnect") private var autoConnect: Bool = true
     
@@ -21,54 +20,48 @@ struct ContentView: View {
                 Color.black.edgesIgnoringSafeArea(.all)
                 
                 if !networkClient.isConnected {
-                    VStack(spacing: 8) {
-                        if autoConnect {
-                            searchingView
-                        } else {
-                            manualConnectView
-                        }
-                    }
+                    searchingView
                 } else {
                     trackpadView
                 }
             }
-            .navigationTitle("Mouse Controller")
+            .navigationTitle("Mouse")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(destination: SettingsView()) {
                         Image(systemName: "gear")
+                            .font(.system(size: 14))
                     }
                 }
             }
         }
         .onAppear {
-            if autoConnect {
-                networkClient.startBrowsing()
-            }
+            networkClient.startBrowsing()
         }
     }
     
     // MARK: - Subviews
     
     private var searchingView: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
             Spacer()
             
+            // Pulsing BLE / Status Icon
             ZStack {
                 Circle()
-                    .stroke(Color.blue.opacity(0.2), lineWidth: 4)
-                    .frame(width: 50, height: 50)
-                    .scaleEffect(isPulsing ? 1.5 : 1.0)
+                    .stroke(Color.blue.opacity(0.2), lineWidth: 3)
+                    .frame(width: 44, height: 44)
+                    .scaleEffect(isPulsing ? 1.4 : 1.0)
                     .opacity(isPulsing ? 0.0 : 1.0)
                 
                 Circle()
-                    .fill(Color.blue.opacity(0.1))
-                    .frame(width: 50, height: 50)
+                    .fill(Color.blue.opacity(0.08))
+                    .frame(width: 44, height: 44)
                 
-                Image(systemName: networkClient.browserFailed ? "wifi.exclamationmark" : "desktopcomputer")
-                    .font(.title2)
-                    .foregroundColor(networkClient.browserFailed ? .orange : .blue)
+                Image(systemName: networkClient.bluetoothPermissionDenied ? "exclamationmark.triangle.fill" : "wave.3.right.circle.fill")
+                    .font(.title3)
+                    .foregroundColor(networkClient.bluetoothPermissionDenied ? .orange : .blue)
             }
             .onAppear {
                 withAnimation(Animation.easeOut(duration: 1.5).repeatForever(autoreverses: false)) {
@@ -79,111 +72,76 @@ struct ContentView: View {
                 isPulsing = false
             }
             
-            if networkClient.browserFailed {
-                Text("Allow Local Network Access")
-                    .font(.system(.caption2, design: .rounded))
-                    .foregroundColor(.orange)
-                Text("On your iPhone: Settings → Privacy & Security → Local Network → enable this app")
-                    .font(.system(size: 8, design: .rounded))
+            VStack(spacing: 2) {
+                Text(networkClient.bluetoothPermissionDenied ? "Bluetooth Denied" : "Searching...")
+                    .font(.system(.body, design: .rounded))
+                    .bold()
+                Text(networkClient.bluetoothPermissionDenied ? "Enable Bluetooth in Settings" : "Start Mac Mouse Server")
+                    .font(.system(size: 10, design: .rounded))
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 6)
-            } else {
-                Text(networkClient.isSearching ? "Searching for Mac..." : "Ready to search")
-                    .font(.system(.footnote, design: .rounded))
-                    .foregroundColor(.secondary)
-                Text("Make sure Mac Mouse Server is running")
-                    .font(.system(size: 8, design: .rounded))
-                    .foregroundColor(.secondary.opacity(0.7))
-                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 4)
             }
             
             Spacer()
             
             if !networkClient.discoveredServers.isEmpty {
                 ScrollView {
-                    VStack(spacing: 6) {
-                        ForEach(networkClient.discoveredServers, id: \.self) { endpoint in
+                    VStack(spacing: 4) {
+                        ForEach(networkClient.discoveredServers, id: \.identifier) { peripheral in
                             Button(action: {
-                                networkClient.connect(to: endpoint)
+                                networkClient.connect(to: peripheral)
                             }) {
                                 HStack {
                                     Image(systemName: "macmini")
                                         .foregroundColor(.green)
-                                        .font(.footnote)
-                                    Text(friendlyName(for: endpoint))
+                                        .font(.caption2)
+                                    Text(peripheral.name ?? "Mac Server")
                                         .font(.system(.caption2, design: .rounded))
+                                        .bold()
                                         .lineLimit(1)
                                     Spacer()
                                     Image(systemName: "chevron.right")
                                         .font(.system(size: 8))
                                         .foregroundColor(.secondary)
                                 }
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 8)
-                                .background(Color.white.opacity(0.1))
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 6)
+                                .background(Color.white.opacity(0.08))
                                 .cornerRadius(8)
                             }
                             .buttonStyle(.plain)
                         }
                     }
-                    .padding(.horizontal, 12)
                 }
-                .frame(maxHeight: 65)
+                .frame(maxHeight: 55)
             } else {
-                VStack(spacing: 4) {
-                    Button(networkClient.isSearching ? "Searching..." : "Retry Search") {
+                if !networkClient.bluetoothPermissionDenied && !networkClient.isSearching {
+                    Button("Scan") {
                         networkClient.startBrowsing()
                     }
                     .font(.system(.caption2, design: .rounded))
                     .foregroundColor(.blue)
-                    .disabled(networkClient.isSearching)
-                    
-                    Button("Connect to Saved IP") {
-                        networkClient.connect(to: hostIP)
-                    }
-                    .font(.system(size: 9, design: .rounded))
-                    .foregroundColor(.secondary)
+                } else if networkClient.isSearching {
+                    Text("Scanning BLE...")
+                        .font(.system(size: 8, design: .rounded))
+                        .foregroundColor(.secondary.opacity(0.6))
                 }
             }
         }
-    }
-    
-    private var manualConnectView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "wifi.slash")
-                .font(.largeTitle)
-                .foregroundColor(.red)
-            Text("Not Connected")
-                .foregroundColor(.red)
-                .font(.footnote)
-            
-            Button("Connect to \(hostIP)") {
-                networkClient.connect(to: hostIP)
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.blue)
-            .font(.footnote)
-            
-            Button("Enable Auto-Connect") {
-                autoConnect = true
-                networkClient.startBrowsing()
-            }
-            .font(.system(.caption2, design: .rounded))
-            .foregroundColor(.secondary)
-        }
+        .padding(.horizontal, 8)
     }
     
     private var trackpadView: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 3) {
             // Connection Status Header
             HStack {
                 Circle()
                     .fill(Color.green)
-                    .frame(width: 6, height: 6)
+                    .frame(width: 5, height: 5)
                     .shadow(color: .green, radius: 2)
                 Text(networkClient.connectedHostName)
-                    .font(.system(size: 10, weight: .bold, design: .monospaced))
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
                     .foregroundColor(.green)
                     .lineLimit(1)
                 
@@ -193,23 +151,22 @@ struct ContentView: View {
                     networkClient.disconnect()
                 }) {
                     Image(systemName: "power")
-                        .font(.caption)
+                        .font(.system(size: 10))
                         .foregroundColor(.red.opacity(0.8))
                 }
                 .buttonStyle(.plain)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
             .background(Color.white.opacity(0.06))
-            .cornerRadius(8)
-            .padding(.horizontal, 4)
+            .cornerRadius(6)
             
             // Interactive Canvas
             ZStack {
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(LinearGradient(colors: [.blue.opacity(0.4), .purple.opacity(0.15)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1.5)
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(LinearGradient(colors: [.blue.opacity(0.4), .purple.opacity(0.15)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1.2)
                     .background(
-                        RoundedRectangle(cornerRadius: 14)
+                        RoundedRectangle(cornerRadius: 12)
                             .fill(Color.white.opacity(0.01))
                     )
                 
@@ -227,12 +184,12 @@ struct ContentView: View {
                 if let dragLoc = dragLocation {
                     Circle()
                         .fill(RadialGradient(
-                            colors: [.blue.opacity(0.6), .blue.opacity(0)],
+                            colors: [.blue.opacity(0.5), .blue.opacity(0)],
                             center: .center,
                             startRadius: 0,
-                            endRadius: 15
+                            endRadius: 12
                         ))
-                        .frame(width: 30, height: 30)
+                        .frame(width: 24, height: 24)
                         .position(dragLoc)
                 }
             }
@@ -269,18 +226,8 @@ struct ContentView: View {
                     }
                 )
             )
-            .padding(.bottom, 2)
         }
-    }
-    
-    // MARK: - Helpers
-    
-    private func friendlyName(for endpoint: NWEndpoint) -> String {
-        if case let .service(name, _, _, _) = endpoint {
-            return name
-        } else if case let .hostPort(host, _) = endpoint {
-            return "\(host)"
-        }
-        return "Mac Server"
+        .padding(.bottom, 2)
+        .padding(.horizontal, 2)
     }
 }
