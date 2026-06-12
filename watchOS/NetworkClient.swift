@@ -32,7 +32,9 @@ class NetworkClient: ObservableObject {
         discoveredServers.removeAll()
         isSearching = true
 
+        // Force Wi-Fi interface so VPN (ipsec1) doesn't intercept Bonjour discovery
         let parameters = NWParameters.udp
+        parameters.requiredInterfaceType = .wifi
         let descriptor = NWBrowser.Descriptor.bonjour(type: "_applewatchmouse._udp", domain: nil)
         let newBrowser = NWBrowser(for: descriptor, using: parameters)
         self.browser = newBrowser
@@ -120,7 +122,14 @@ class NetworkClient: ObservableObject {
 
         print("Connecting to \(endpoint)...")
 
-        let conn = NWConnection(to: endpoint, using: .udp)
+        // Force Wi-Fi interface to bypass any active VPN (e.g. ipsec1) that blocks
+        // local Bonjour/mDNS traffic via NECP policy denial.
+        let params = NWParameters.udp
+        params.requiredInterfaceType = .wifi
+        params.prohibitExpensivePaths = false
+        params.prohibitConstrainedPaths = false
+
+        let conn = NWConnection(to: endpoint, using: params)
         self.connection = conn
 
         conn.stateUpdateHandler = { [weak self] state in
